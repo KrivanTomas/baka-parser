@@ -1,0 +1,49 @@
+[
+{
+  "type": "atom",
+  "subjecttext": "<subject_name> | <date> | <class_number> <time>",
+  "teacher": "<actual_teacher_name>",
+  "room": "<room>",
+  "group": ["<group_id>",""],
+  "theme": ["<theme>",""],
+  "notice": ["<notice>",""],
+  "changeinfo": ["Suplování: <teacher>","Spojeno: <subject_name>, <teacher>, <room>","Změna místnosti: <room>",""],
+  "homeworks": null,
+  "absencetext": null,
+  "hasAbsent": false,
+  "absentInfoText": ""
+},
+{
+  "type": "removed",
+  "subjecttext": "<date> | <class_number> <time>",
+  "teacher": "",
+  "absentinfo": "<absentinfo>",
+  "InfoAbsentName": null,
+  "removedinfo": "Zrušeno (<short_class>, <teacher>)"
+},
+{
+  "type": null,
+  "subject": null,
+  "lesson": null,
+  "time": null,
+  "teacher": null,
+  "room": null,
+  "group": null,
+  "theme": null,
+  "notice": null,
+  "changeInfo": {
+      "type": null,
+      "subject": null,
+      "teacher": null,
+      "room": null
+  },
+  "removedinfo": {
+      "type": null,
+      "subject": null,
+      "teacher": null
+  }
+}
+]
+removedinfo: 'Přesun na 23.11., 6. hod (MAT, Kučírek Pavel)'
+removedinfo: 'Přesun na 23.11., 6. hod (MAT, Kučírek Pavel)'
+changeinfo: 'Přesun z 23.11., 7: MAT, Kučírek Pavel, B109',
