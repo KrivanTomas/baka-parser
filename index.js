@@ -50,7 +50,7 @@ const cacheLongtime = async () => {
     } catch(err){ console.log(err); }
 
     try{ // cache into a .json file
-        if(!fs.existsSync('cache')) fs.mkdirSync('cache');
+        if(!fs.existsSync('cache')) fs.mkdirSync('cache')
         let ctrInfo = JSON.stringify({ classes: classes, teachers: teachers, rooms: rooms});
         fs.writeFileSync("cache/longtime.json", ctrInfo);
         console.log('✔ Cached and saved to file ✔');
@@ -62,18 +62,42 @@ const getLongtimeCache = () => {
     return JSON.parse(data);
 };
 
+//setup code
+
+if(!fs.existsSync('cache/longtime.json')){
+    await cacheLongtime();
+}
+
+// 🔥🔥 code (not lit but on fire)
+
+
+const LoadCTRData = async (CTRvalue, ctr) => {
+    const longtime = getLongtimeCache();
+    let path;
+    switch(ctr){
+        case 'class': {
+            let value = longtime['classes'].filter((x) => {return x[1] == CTRvalue})[0];
+            path = 'Actual/Class/' + value[0];
+            break;
+        }
+        case 'teacher': {
+            let value = longtime['teachers'].filter((x) => {return x[1] == CTRvalue})[0];
+            path = 'Actual/Teacher/' + value[0];
+            break;
+        }
+        case 'room': {
+            let value = longtime['rooms'].filter((x) => {return x[1] == CTRvalue})[0];
+            path = 'Actual/Room/' + value[0];
+            break;
+        }
+    }
+    const $ = await LoadDataFrom(path);
+    return $;
+}
 
 
 
-
-// something 🔥🔥 (not lit but on fire)
-
-await cacheLongtime();
-const longtime = getLongtimeCache();
-let clas = longtime['classes'].filter((x) => {return x[1] == 'TLA3'})[0];
-console.log(clas);
-const $ = await LoadDataFrom('Actual/Class/' + clas[0]);
-
+const $ = await LoadCTRData('ITA3', 'class');
 
 let hodiny = [];
 const actualDate = new Date();
