@@ -29,7 +29,7 @@ const LoadDataFrom = async (addUrl) => {
 };
 
 const cacheLongtime = async () => {
-    console.log('\x1b[35m', '-=-=-=-=-=-Caching longtime-=-=-=-=-=-', '\x1b[0m')
+    console.log('\x1b[35m', '-=-=-=-=-=-Caching longtime-=-=-=-=-=-', '\x1b[0m');
     let timed = Date.now();
     const $ = await LoadData();
     let classes = [], teachers = [], rooms = [];
@@ -130,8 +130,6 @@ const ParseTime = (timeValues) => {
 }
 
 const CacheClassData = async (className) => {
-    console.log(`Started parsing ${className}`)
-    let timed = Date.now();
     const $ = await LoadCTRData('class',className);
 
     let lessons = [];
@@ -179,6 +177,15 @@ const CacheClassData = async (className) => {
                 if(lessons[i]['changeinfo'] !== '') {
                     let values = lessons[i]['changeinfo'].match(/[^\:,]+/g);
                     readyForExp[i]['changeInfo']['type'] = values[0];
+                    if(/\d/.test(values[0])) {
+                        if(/Přesun z/.test(values[0])){
+                            readyForExp[i]['changeInfo']['type'] = 'Přesun z';
+                            readyForExp[i]['changeInfo']['subject'] = values[2].slice(1);
+                            readyForExp[i]['changeInfo']['teacher'] = values[3].slice(1);
+                            readyForExp[i]['changeInfo']['room'] = GetCTRPair('rooms',values[4].slice(1));
+                            break;
+                        }
+                    }
                     switch(values[0]) {
                         case 'Spojeno':{          
                             if(values.length === 4){
@@ -200,6 +207,12 @@ const CacheClassData = async (className) => {
                             readyForExp[i]['changeInfo']['room'] = GetCTRPair('rooms',values[1].slice(1));
                             break;
                         }
+                        case  'Přidáno do rozvrhu':{
+                            readyForExp[i]['changeInfo']['subject'] = values[1].slice(1);
+                            readyForExp[i]['changeInfo']['teacher'] = values[2].slice(1);
+                            readyForExp[i]['changeInfo']['room'] = GetCTRPair('rooms',values[3].slice(1));
+                            break;
+                        }
                         default: {
                             let msg = 'Unknown type in changed >' + values[0] + '< at >' + className + '<';
                             console.log(msg);
@@ -216,8 +229,21 @@ const CacheClassData = async (className) => {
     
                 let values = lessons[i]['removedinfo'].match(/[^\(\),]+/g);
                     readyForExp[i]['removedinfo']['type'] = values[0].slice(0,-1);
+                    if(/\d/.test(values[0])) {
+                        if(/Přesun na/.test(values[0])){
+                            readyForExp[i]['removedinfo']['type'] = 'Přesun na';
+                            readyForExp[i]['removedinfo']['subject'] = values[2].slice(1);
+                            readyForExp[i]['removedinfo']['teacher'] = values[3].slice(1);
+                            break;
+                        }
+                    }
                     switch(values[0].slice(0,-1)) {
                         case 'Zrušeno':{          
+                            readyForExp[i]['removedinfo']['subject'] = values[1];
+                            readyForExp[i]['removedinfo']['teacher'] = values[2].slice(1);
+                            break;
+                        }
+                        case 'Vyjmuto z rozvrhu':{
                             readyForExp[i]['removedinfo']['subject'] = values[1];
                             readyForExp[i]['removedinfo']['teacher'] = values[2].slice(1);
                             break;
@@ -230,6 +256,12 @@ const CacheClassData = async (className) => {
                     }
                 break;
             }
+            case 'absent': {
+                readyForExp[i]['type'] = lessons[i]['type'];
+                let timeValues = lessons[i]['subjecttext'].match(/\d{1,2}/g);
+                readyForExp[i]['time'] = ParseTime(timeValues);
+                break;
+            }
             default: {
                 let msg = 'Unknown type >' + lessons[i]['type'] + '< at >' + className + '<';
                 console.log(msg);
@@ -240,8 +272,6 @@ const CacheClassData = async (className) => {
     if (!fs.existsSync('cache')) fs.mkdirSync('cache');
     if (!fs.existsSync('cache/classes')) fs.mkdirSync('cache/classes');
     fs.writeFileSync(`cache/classes/${className}.json`, JSON.stringify(readyForExp));
-    timed = Date.now() - timed;
-    console.log(`Finished parsing ${className} in ${timed}ms`)
 }
 
 
@@ -251,11 +281,26 @@ if (!fs.existsSync('cache/longtime.json')) {
     await cacheLongtime();
 }
 
-//await CacheClassData('ENE4');
+// await CacheClassData('ENE4');
 
+
+console.log('\x1b[35m', '-=-=-=-=-=-Caching classes-=-=-=-=-=-', '\x1b[0m')
+const finalcount = getLongtimeCache()['classes'].length;
+let nowScount = 0;
+let nowDcount = 0;
+process.stdout.write(`Began caching 0/${finalcount} classes`);
 getLongtimeCache()['classes'].forEach(async (elem) => {
+    nowScount++;
+    process.stdout.clearLine();
+    process.stdout.cursorTo(0);
+    process.stdout.write(`Began caching ${nowScount}/${finalcount} classes`);
     await CacheClassData(elem[1]);
+    nowDcount++;
+    process.stdout.clearLine();
+    process.stdout.cursorTo(0);
+    process.stdout.write(`Cached ${nowDcount}/${finalcount} classes`);
 });
+process.stdout.write('\n');
 
 
 

@@ -47,3 +47,9 @@
 removedinfo: 'Přesun na 23.11., 6. hod (MAT, Kučírek Pavel)'
 removedinfo: 'Přesun na 23.11., 6. hod (MAT, Kučírek Pavel)'
 changeinfo: 'Přesun z 23.11., 7: MAT, Kučírek Pavel, B109',
+
+Unknown type in changed >Přidáno do rozvrhu< at >ITB3<
+Unknown type in removed >Vyjmuto z rozvrhu< at >ENE2<
+
+changeinfo: 'Přidáno do rozvrhu: OBN, Dočekalová Ivona, A138',
+absent
