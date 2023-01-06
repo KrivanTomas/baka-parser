@@ -4,9 +4,11 @@ import * as fs from 'fs';
 import { type } from 'os';
 
 
+const BakaWebUrl = `https://bakalari.spst.cz`
+
 const LoadData = async () => {
     try {
-        const url = `https://bakalari.spst.cz/Timetable/Public/`;
+        const url = `${BakaWebUrl}/Timetable/Public/`;
         const res = got(url);
         const data = await res;
         return cheerio.load(data.body);
@@ -18,7 +20,7 @@ const LoadData = async () => {
 
 const LoadDataFrom = async (addUrl) => {
     try {
-        const url = `https://bakalari.spst.cz/Timetable/Public/${addUrl}`;
+        const url = `${BakaWebUrl}/Timetable/Public/${addUrl}`;
         const res = got(url);
         const data = await res;
         return cheerio.load(data.body);
