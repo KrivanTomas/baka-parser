@@ -1,5 +1,10 @@
-# baka-parser
+# baka-parser 
 A node.js app for scraping/parsing data from the public Bakalari timetable into usable .json files.
+
+# 🛑Currently broken🛑
+The `how to use` section is currently only for reference, and the app will throw an error, even if done correctly.
+
+I am working on a TypeScript rewrite. I will update the README when the TypeScript reaches the featureset of the legacy code.
 
 ## How to use
 - Make sure that node.js is installed by running `node -v`
