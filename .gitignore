@@ -1,5 +1,7 @@
-# baka-parser cache
+# baka-parser
+config/config.json
 cache
+dist
 
 # Logs
 logs
